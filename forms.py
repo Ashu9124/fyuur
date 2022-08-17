@@ -4,9 +4,9 @@ from wtforms import StringField, SelectField, SelectMultipleField, DateTimeField
 from wtforms.validators import DataRequired, AnyOf, URL, ValidationError
 import re
 
-def validate_phone(form, field):
+def validate_phone(self, field):
     if not re.search(r"^[0-9]*$", field.data):
-        raise ValidationError("Phone number should only contain digits.")
+        raise ValidationError("Phone number should only contain digits. and of the format xxx-xxx-xxxx")
 
 genres_choices = [
     ('Alternative', 'Alternative'),
@@ -96,7 +96,7 @@ class ShowForm(Form):
     start_time = DateTimeField(
         'start_time',
         validators=[DataRequired()],
-        default= datetime.today()
+        default=datetime.today()
     )
 
 class VenueForm(Form):
@@ -117,7 +117,7 @@ class VenueForm(Form):
         'phone'
     )
     image_link = StringField(
-        'image_link'
+        'image_link' , validators=[URL()],
     )
     genres = SelectMultipleField(
 
@@ -125,10 +125,10 @@ class VenueForm(Form):
         choices=genres_choices
     )
     facebook_link = StringField(
-        'facebook_link', validators=[URL()]
+        'facebook_link', validators=[URL()],
     )
     website_link = StringField(
-        'website_link'
+        'website_link', validators=[URL()]
     )
 
     seeking_talent = BooleanField( 'seeking_talent' )
@@ -170,7 +170,7 @@ class ArtistForm(Form):
         'website_link'
      )
 
-    seeking_venue = BooleanField( 'seeking_venue' )
+    seeking_venue = SelectField( 'seeking_venue', choices=[True,False] )
 
     seeking_description = StringField(
             'seeking_description'
